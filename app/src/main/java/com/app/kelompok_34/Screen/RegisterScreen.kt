@@ -2,37 +2,19 @@ package com.app.kelompok_34.Screen
 
 import android.util.Patterns
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.app.kelompok_34.model.request.RegisterRequest
 import com.app.kelompok_34.navigation.Screen
+import com.app.kelompok_34.service.api.ApiClient
 import kotlinx.coroutines.launch
 
 /**
@@ -179,8 +161,33 @@ fun RegisterScreen(navController: NavHostController) {
                 // Jika semua input valid, lakukan registrasi
                 if (!fullNameError && !usernameError && !emailError && !passwordError && !confirmPasswordError) {
                     isLoading = true
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Register.route) { inclusive = true }
+                    coroutineScope.launch {
+                        try {
+                            val response = ApiClient.instance.register(
+                                RegisterRequest(
+                                    nm_lengkap = fullName,
+                                    email = email,
+                                    username = username,
+                                    password = password
+                                )
+                            )
+                            isLoading = false
+                            val body = response.body()
+
+                            if (response.isSuccessful && body != null) {
+                                Toast.makeText(context, "Registrasi berhasil!", Toast.LENGTH_SHORT).show()
+                                // Navigasi ke halaman login setelah sukses
+                                navController.navigate(Screen.Login.route) {
+                                    popUpTo(Screen.Register.route) { inclusive = true }
+                                }
+                            } else {
+                                val errorMsg = body?.message ?: response.message()
+                                Toast.makeText(context, "Gagal: $errorMsg", Toast.LENGTH_LONG).show()
+                            }
+                        } catch (e: Exception) {
+                            isLoading = false
+                            Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             },

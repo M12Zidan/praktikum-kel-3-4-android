@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.app.kelompok_34.navigation.Screen
+import com.app.kelompok_34.navigation.SetupNavGraph
 import com.app.praktikum_kel1_2.components.BottomBar
-import com.app.praktikum_kel1_2.navigation.SetupNavGraph
 
 /**
  * Fungsi utama untuk menjalankan struktur UI aplikasi.
