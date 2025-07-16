@@ -3,9 +3,11 @@ package com.app.kelompok_34.service.api
 import com.app.kelompok_34.model.request.LoginRequest
 import com.app.kelompok_34.model.request.RegisterRequest
 import com.app.kelompok_34.model.response.LoginResponse
+import com.app.kelompok_34.model.response.NotesResponse
 import com.app.kelompok_34.model.response.RegisterResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 
@@ -34,4 +36,15 @@ interface ApiService {
      */
     @POST("/api/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
+
+    /**
+     * Mengambil seluruh data catatan (notes) dari server.
+     *
+     * Endpoint ini tidak memerlukan parameter dan biasanya membutuhkan header Authorization.
+     *
+     * @return Objek [NotesResponse] yang berisi daftar catatan.
+     */
+    @GET("api/notes")
+    suspend fun getAllNotes(): NotesResponse
+
 }
