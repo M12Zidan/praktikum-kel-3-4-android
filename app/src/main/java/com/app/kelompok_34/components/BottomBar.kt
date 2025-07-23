@@ -38,6 +38,9 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
         BottomNavItem(Screen.Home.route) {
             Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
         },
+        BottomNavItem(Screen.CreateNote.route) {
+            Icon(imageVector = Icons.Default.Home, contentDescription = "Create Note")
+        },
         BottomNavItem(Screen.Profile.route) {
             Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile")
         }
